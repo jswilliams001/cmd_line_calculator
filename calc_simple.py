@@ -27,13 +27,15 @@ def shunting_yard(infix_expression: str) -> tuple[list[str], str]:
     # Assume that the user is sloppy with whitespace by ignoring whitespace and delimiting numbers with any non-number
     tokens = []  # expression.split()
     temp_token = []
-    parenthesis_count = 0
+    parenthesis = 0
     for char_ in infix_expression:
         if not bool(re.match(r'[-+*/%^()0-9.\s]+', char_)):  # r'...' raw string to supress escape sequence warning
             print(f"Invalid character: {char_}")
             return return_val
-        if char_ in '()':
-            parenthesis_count += 1
+        if char_ in '(':
+            parenthesis += 1
+        if char_ in ')':
+            parenthesis -= 1
         if char_.isspace():
             continue
         if char_.isnumeric() or char_ == '.':
@@ -48,7 +50,7 @@ def shunting_yard(infix_expression: str) -> tuple[list[str], str]:
             tokens.append(char_)
     if temp_token:  # if last char_ was a number it still needs to be appended to tokens
         tokens.append(''.join(temp_token))
-    if parenthesis_count % 2 != 0:
+    if parenthesis != 0:
         print(f"Invalid use of parenthesis in input {' '.join(tokens)}")
         return return_val
     if debug:
