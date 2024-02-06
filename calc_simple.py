@@ -28,7 +28,6 @@ def shunting_yard(infix_expression: str) -> tuple[list[str], str]:
     tokens = []  # expression.split()
     temp_token = []
     parenthesis_count = 0
-    # match_string = '[-+*/^()0-9.\s]+'
     for char_ in infix_expression:
         if not bool(re.match(r'[-+*/%^()0-9.\s]+', char_)):  # r'...' raw string to supress escape sequence warning
             print(f"Invalid character: {char_}")
