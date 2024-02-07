@@ -1,5 +1,6 @@
 import unittest
-from calc_simple import shunting_yard, calculate
+from unittest.mock import patch
+from calc_simple import shunting_yard, calculate, main
 
 
 class TestShuntingYard(unittest.TestCase):
@@ -41,7 +42,7 @@ class TestShuntingYard(unittest.TestCase):
         self.assertEqual(actual, expected)
 
 
-class TestCalcSimple(unittest.TestCase):
+class TestCalculate(unittest.TestCase):
 
     def test_addition(self):
         self.assertEqual(calculate(["2", "3", "+"]), 5.0)
@@ -73,7 +74,23 @@ class TestCalcSimple(unittest.TestCase):
     def test_pi_approx(self):
         self.assertEqual(calculate(['335000022', '106633819', '/']), 3.1415926498890565)
 
+    def test_divide_by_zero(self):
+        self.assertEqual(calculate(['0', '0', '/']), [])
 
-if __name__ == "__main__":
+
+class TestMain(unittest.TestCase):
+    @patch("builtins.input", side_effect=['2 + 2', '13^2-1', 'h', 'q'])
+    @patch("builtins.print")
+    def test_interactive_ad(self, mock_print, mock_input):
+        with patch('builtins.print') as mock_print:
+            main()
+        mock_print.assert_any_call('2 + 2 = 4')
+        mock_print.assert_any_call('13^2 - 1 = 168')
+        mock_print.assert_any_call('This is a simple command line calculator.')
+        mock_print.assert_called_with('Goodbye.')
+
+
+if __name__ == '__main__':
     unittest.main()
+
 

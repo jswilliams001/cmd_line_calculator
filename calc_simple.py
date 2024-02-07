@@ -140,20 +140,24 @@ def calculate(rpn: list[str]) -> float:
             if debug:
                 print(f"token is number: {eval_stack=}")
         else:
-            if len(eval_stack) >= 2:
-                op2 = float(eval_stack.pop())
-                op1 = float(eval_stack.pop())
-                eval_stack.append(operator_[token](op1, op2))
-            else:
-                print(f"Invalid expression - cannot tokenize")
-                return ''
+            try:
+                if len(eval_stack) >= 2:
+                    op2 = float(eval_stack.pop())
+                    op1 = float(eval_stack.pop())
+                    eval_stack.append(operator_[token](op1, op2))
+                else:
+                    print("Invalid expression - cannot tokenize")
+                    return ''
+            except ArithmeticError:
+                print("Invalid expression - cannot be mathematically evaluated")
+                return []
             if debug:
                 print(f" {op1} {token} {op2} = {(eval_stack[-1:][0])}")
                 print(f"eval: {eval_stack=}")
     if debug:
         print(f"Calculated result {eval_stack=}")
     if len(eval_stack) > 1:
-        print(f"Invalid expression - mismatch between operands and operators")
+        print("Invalid expression - mismatch between operands and operators")
         return ''
     else:
         return eval_stack[0]
@@ -178,7 +182,7 @@ def print_instructions():
     print()
 
 
-if __name__ == "__main__":
+def main():
     print("Enter expression followed by 'return' (q to quit, h for help): ")
     while True:
         user_input = input()
@@ -202,3 +206,7 @@ if __name__ == "__main__":
                     print(f"{cleaned_input} = {x}")
             else:
                 continue
+
+
+if __name__ == "__main__":
+    main()
